@@ -78,8 +78,20 @@ object ContainerV2 {
     get() = this.all { it.type.classifier in registeredClasses }
 }
 
+class TestClass(
+  val list: List<Int>
+)
 
 fun main() {
+  val kClass = TestClass::class
+  val kClassifiers = kClass.constructors.first()
+    .parameters
+    .map { param -> param.type }
+    .map { type -> type.classifier }
+    .map { classifier -> classifier as KClass<*> }
+  println(kClassifiers)
+
+
 //  ContainerV1.register(AService::class)
 //  val aService = ContainerV1.getInstance(AService::class)
 //  aService.print()

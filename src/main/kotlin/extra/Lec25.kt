@@ -59,23 +59,23 @@ class BException : RuntimeException()
 class CException : RuntimeException()
 
 fun main() {
-  try {
-    logic(10)
-  } catch(e: Exception) {
-    when (e) {
-      is AException,
-      is BException -> TODO()
-      is CException -> TODO()
-    }
-    throw e
-  }
+//  try {
+//    logic(10)
+//  } catch(e: Exception) {
+//    when (e) {
+//      is AException,
+//      is BException -> TODO()
+//      is CException -> TODO()
+//    }
+//    throw e
+//  }
 
   runCatching { logic(10) }
     .onError(AException::class, BException::class) {
       println("A 또는 B 예외가 발생했습니다.")
     }
-    .onError(AException::class) {
-
+    .onError(AException::class, CException::class) {
+      println("A 또는 C 예외가 발생했습니다.")
     }
 
 

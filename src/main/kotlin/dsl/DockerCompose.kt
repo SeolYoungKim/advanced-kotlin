@@ -4,7 +4,7 @@ import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 fun main() {
-  val yml = dockerCompose {
+  val yml = dockerCompose {  // init 함수
     version { 3 }
     service(name = "db") {
       image { "mysql" }
@@ -14,17 +14,37 @@ fun main() {
     }
   }
 
+  //'fun service(name: String, init: Service.() -> Unit): Unit' can't be called in this context by implicit receiver. Use the explicit one if necessary
+  //'val hi: String' can't be called in this context by implicit receiver. Use the explicit one if necessary
   val yml2 = dockerCompose {
+    val dockerCompose = this
     service("") {
-//      service("") { // @DslMarker 효과
-//
-//      }
+      // 암시적 호출 불가
+//      service("hi") {}  // @DslMarker 효과
+//      hi
+
+      // 명시적 호출 가능
+      this@dockerCompose.service("hi") {}
+      this@dockerCompose.hi
+
+      dockerCompose.service("hi") {}
+      dockerCompose.hi
+
+      image { "mysql" }
+      env("USER" - "myuser")
+      env("PASSWORD" - "mypassword")
+      port(host = 9999, container = 3306)
+    }
+
+    service("") {
+
     }
   }
 
   println(yml.render("  "))
 }
 
+// 확장 함수로 만든 이유 : this라는 키워드로 DockerCompose의 함수를 접근할 수 있기 때문
 fun dockerCompose(init: DockerCompose.() -> Unit): DockerCompose {
   val dockerCompose = DockerCompose()
   dockerCompose.init()
@@ -33,11 +53,13 @@ fun dockerCompose(init: DockerCompose.() -> Unit): DockerCompose {
 
 @YamlDsl
 class DockerCompose {
-  private var version: Int by onceNotNull()
+  private var version: Int by onceNotNull()  // version을 not null로 관리하기 위해 지연 초기화 이용 (위임)
   private val services = mutableListOf<Service>()
+  val hi = "hi!"
 
-  fun version(init: () -> Int) {
+  fun version(init: () -> Int): Int {
     version = init()
+    return 1
   }
 
   fun service(name: String, init: Service.() -> Unit) {
@@ -106,7 +128,7 @@ data class PortRule(
   val container: Int
 )
 
-fun <T> onceNotNull() = object : ReadWriteProperty<Any? ,T> {
+fun <T> onceNotNull() = object : ReadWriteProperty<Any?, T> {
   private var value: T? = null
   override fun getValue(thisRef: Any?, property: KProperty<*>): T {
     if (this.value == null) {

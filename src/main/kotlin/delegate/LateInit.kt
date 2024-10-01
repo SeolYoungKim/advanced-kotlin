@@ -2,6 +2,8 @@ package delegate
 
 class Person {
   lateinit var name: String
+//  lateinit var number: Int  // 사용 불가
+//  lateinit var nullableNumber: Int?  // 사용 불가
 
   val isKim: Boolean
     get() = this.name.startsWith("김")

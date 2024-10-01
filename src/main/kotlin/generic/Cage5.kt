@@ -1,7 +1,7 @@
 package generic
 
 fun main() {
-
+  val cage5 = Cage5<Sparrow>()
 }
 
 abstract class Bird(
@@ -21,7 +21,7 @@ class Cage5<T>(
   private val animals: MutableList<T> = mutableListOf(),
 ) where T : Animal, T : Comparable<T> {
 
-  fun printAfterSorting() {
+  fun printNameAfterSorting() {
     this.animals.sorted()
       .map { it.name }
       .let { println(it) }

@@ -35,8 +35,10 @@ class LazyInitProperty<T>(val init: () -> T): ReadOnlyProperty<Any, T> {
       return _value!!
     }
 
+  // thisRef : 위임 프로퍼티를 갖고 있는 클래스의 인스턴스
+  // property : 위임 프로퍼티 정보 (위임 시킨 프로퍼티)
   override fun getValue(thisRef: Any, property: KProperty<*>): T {
-    return value
+    return value  // value의 getter가 호출된다
   }
 }
 
@@ -46,7 +48,16 @@ class Person4 {
   }
 }
 
+class Person99(map: Map<String, Any>) {
+  val name: String by map
+  val age: Int by map
+}
+
 fun main() {
+  val person99 = Person99(mapOf("name" to "kim", "age" to 999))
+  println("name: ${person99.name}")
+  println("age: ${person99.age}")
+
   Person5()
 }
 
@@ -102,13 +113,27 @@ class GreenApple : Fruit {
   }
 }
 
-class GreenApple2 : Apple() {
+class GreenApple1 : Apple() {
   override val color: String
     get() = "초록색"
 }
 
+class GreenApple2(
+  private val apple: Apple,
+) : Fruit {
+  override val name: String
+    get() = apple.name
+
+  override val color: String
+    get() = "초록색"
+
+  override fun bite() {
+    apple.bite()
+  }
+}
+
 class GreenApple3(
-  private val apple: Apple
+  private val apple: Apple,
 ) : Fruit by apple {
   override val color: String
     get() = "초록색"

@@ -29,6 +29,7 @@ fun main() {
 
   val list = listOf("A", "B", "C")
   list[2]
+
   val map = mutableMapOf(1 to "A")
   map[2] = "B"
 
@@ -49,6 +50,14 @@ val Int.d: Days
 
 operator fun LocalDate.plus(days: Days): LocalDate {
   return this.plusDays(days.day)
+}
+
+operator fun LocalDate.plus(months: Long): LocalDate {
+  return this.plusMonths(months)
+}
+
+operator fun LocalDate.plusAssign(days: Days) {
+  this.plusDays(days.day)
 }
 
 

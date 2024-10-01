@@ -6,9 +6,17 @@ fun main() {
     MyFruit("바나나", 3000L),
   )
 
+  // Iterable을 이용하는 방법
+  val avgWithIterable = fruits
+    .filter { it.name == "사과" }
+    .map { it.price }
+    .take(10_000)
+    .average()
+
   // 2,000,000 -> 모두 필터링!
   // [과일, 과일 과일, .. ]
-  val avg = fruits.asSequence()
+  // Sequence를 이용하는 방법
+  val avgWithSequence = fruits.asSequence()
     .filter { it.name == "사과" }
     .map { it.price }
     .take(10_000)

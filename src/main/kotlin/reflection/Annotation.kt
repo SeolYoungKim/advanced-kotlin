@@ -10,6 +10,7 @@ annotation class Shape(
 
 @Shape(["C"])
 @Shape(["A", "B"])
+@Shape(arrayOf("A", "B"))
 class Annotation {
 }
 
